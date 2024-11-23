@@ -1,0 +1,13 @@
+#cloud-config
+password: ubuntu
+ssh_pwauth: true
+chpasswd:
+  expire: false
+
+users:
+  - default
+  - name: sosso
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) ALL"]
+    lock_passwd: false
+    passwd: $5$JXSY62tD272lb/Hu$EWEIZJZ./1WDTbgxiCIZFzq1EspuIcjl81tbpMGBgcC

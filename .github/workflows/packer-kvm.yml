@@ -1,0 +1,83 @@
+name: Build KVM Image with Packer
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select the environment (testing, development, production)"
+        required: true
+        default: "testing"
+
+jobs:
+  build:
+    name: build-kvm-image
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+        # Step 2: Install Dependencies (Packer and QEMU)
+      - name: Install QEMU and KVM
+        run: |
+          sudo apt-get update
+          sudo apt -y install qemu-kvm libvirt-daemon  bridge-utils libvirt-daemon-system
+          sudo apt -y install vim libguestfs-tools libosinfo-bin  qemu-system virt-manager
+
+      - name: Install Packer
+        run: |
+          sudo apt-get install -y wget unzip
+          wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          sudo apt update && sudo apt install packer
+          packer --version
+
+      - name: Verify installation
+        run: |
+          qemu-system-x86_64 --version
+          kvm --version
+          packer --version
+
+      # Step 3: Generate Cloud-Init Seed Image
+      - name: Generate cloud-init seed image
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          mkdir -p packer/builders/kvm/cloud-init/$ENVIRONMENT/seed
+          cloud-localds packer/builders/kvm/cloud-init/$ENVIRONMENT/seed.img \
+            packer/builders/kvm/cloud-init/$ENVIRONMENT/user-data \
+            packer/builders/kvm/cloud-init/$ENVIRONMENT/meta-data
+
+      # Step 4: Initialize Packer
+      - name: Initialize Packer
+        run: |
+          cd packer/builders/kvm
+          packer init .
+
+      # Step 5: Build the KVM Image
+      - name: Build KVM Image with Packer
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          mkdir -p output/kvm/$ENVIRONMENT
+          packer build -var "seed_image_path=builders/kvm/cloud-init/$ENVIRONMENT/seed.img" \
+                       -var "output_directory=output/kvm/$ENVIRONMENT" \
+                       packer/builders/kvm
+
+      # Step 6: Commit and Push the Image
+      - name: Commit and Push the Image
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+          IMAGE_NAME="ubuntu-kvm-${ENVIRONMENT}-${TIMESTAMP}.qcow2"
+          mv output/kvm/$ENVIRONMENT/*.qcow2 output/kvm/$ENVIRONMENT/$IMAGE_NAME
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add output/kvm/$ENVIRONMENT/$IMAGE_NAME
+          git commit -m "Add KVM image for $ENVIRONMENT: $IMAGE_NAME"
+          git push origin main

@@ -1,0 +1,49 @@
+packer-project/
+├── packer/                     # Root folder for Packer configurations
+│   ├── builders/               # Platform-specific Packer configurations
+│   │   ├── kvm/                # KVM-specific configuration and files
+│   │   │   ├── packer.json     # Packer JSON config for KVM
+│   │   │   └── cloud-init/     # Cloud-init configurations for KVM
+│   │   │       ├── testing/
+│   │   │       │   ├── user-data       # Cloud-init user-data for testing
+│   │   │       │   ├── meta-data       # Cloud-init meta-data for testing
+│   │   │       │   └── seed.img        # Generated seed image for testing
+│   │   │       ├── development/
+│   │   │       │   ├── user-data       # Cloud-init user-data for development
+│   │   │       │   ├── meta-data       # Cloud-init meta-data for development
+│   │   │       │   └── seed.img        # Generated seed image for development
+│   │   │       └── production/
+│   │   │           ├── user-data       # Cloud-init user-data for production
+│   │   │           ├── meta-data       # Cloud-init meta-data for production
+│   │   │           └── seed.img        # Generated seed image for production
+│   │   ├── aws/                # AWS-specific configuration and files
+│   │   │   ├── packer.json     # Packer JSON config for AWS
+│   │   │   └── cloud-init/     # Cloud-init configurations for AWS
+│   │   │       ├── testing/
+│   │   │       ├── development/
+│   │   │       └── production/
+│   │   ├── azure/              # Azure-specific configuration and files
+│   │   │   ├── packer.json     # Packer JSON config for Azure
+│   │   │   └── cloud-init/     # Cloud-init configurations for Azure
+│   │   │       ├── testing/
+│   │   │       ├── development/
+│   │   │       └── production/
+├── output/                     # Directory for generated images
+│   ├── kvm/
+│   │   └── testing/            # Testing images for KVM
+│   │   └── development/        # Development images for KVM
+│   │   └── production/         # Production images for KVM
+│   ├── aws/
+│   │   └── testing/            # Testing images for AWS
+│   │   └── development/        # Development images for AWS
+│   │   └── production/         # Production images for AWS
+│   ├── azure/
+│   │   └── testing/            # Testing images for Azure
+│   │   └── development/        # Development images for Azure
+│   │   └── production/         # Production images for Azure
+├── .github/
+│   └── workflows/
+│       ├── packer-kvm.yml      # GitHub Actions workflow for KVM builds
+│       ├── packer-aws.yml      # GitHub Actions workflow for AWS builds
+│       └── packer-azure.yml    # GitHub Actions workflow for Azure builds
+└── README.md                   # Documentation

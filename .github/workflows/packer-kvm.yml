@@ -102,8 +102,8 @@ jobs:
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           IMAGE_NAME="ubuntu-kvm-${ENVIRONMENT}-${TIMESTAMP}.qcow2"
           sudo mv output/kvm/$ENVIRONMENT/*.qcow2 output/kvm/$ENVIRONMENT/$IMAGE_NAME
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "youssef GHActions"
+          git config user.email "youssefmoustakim234@gmail.com"
           git add output/kvm/$ENVIRONMENT/$IMAGE_NAME
           git commit -m "Add KVM image for $ENVIRONMENT: $IMAGE_NAME"
           git push origin main

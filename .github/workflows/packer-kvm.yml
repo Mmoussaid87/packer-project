@@ -101,7 +101,7 @@ jobs:
           ENVIRONMENT=${{ github.event.inputs.environment }}
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           IMAGE_NAME="ubuntu-kvm-${ENVIRONMENT}-${TIMESTAMP}.qcow2"
-          mv output/kvm/$ENVIRONMENT/*.qcow2 output/kvm/$ENVIRONMENT/$IMAGE_NAME
+          sudo mv output/kvm/$ENVIRONMENT/*.qcow2 output/kvm/$ENVIRONMENT/$IMAGE_NAME
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add output/kvm/$ENVIRONMENT/$IMAGE_NAME

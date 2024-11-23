@@ -58,7 +58,8 @@ jobs:
           # Define the cloud-init path and remove trailing slashes
           CLOUD_INIT_PATH="packer/builders/kvm/cloud-init"
           CLOUD_INIT_PATH="${CLOUD_INIT_PATH%/}" # Remove trailing slash if it exists
-
+          echo "CLOUD_INIT_PATH: $CLOUD_INIT_PATH"
+          echo "ENVIRONMENT: $ENVIRONMENT"
           # Ensure the directory structure exists
           mkdir -p "${CLOUD_INIT_PATH}/${ENVIRONMENT}"
 

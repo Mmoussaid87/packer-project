@@ -91,7 +91,7 @@ jobs:
           export PACKER_LOG=1
           ENVIRONMENT=${{ github.event.inputs.environment }}
           mkdir -p output/kvm
-          packer build -var "seed_image_path=packer/builders/kvm/cloud-init/$ENVIRONMENT/seed.img" \
+          sudo packer build -var "seed_image_path=packer/builders/kvm/cloud-init/$ENVIRONMENT/seed.img" \
                        -var "output_directory=output/kvm/$ENVIRONMENT" \
                        packer/builders/kvm
 

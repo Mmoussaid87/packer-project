@@ -63,6 +63,7 @@ jobs:
       # Step 5: Build the KVM Image
       - name: Build KVM Image with Packer
         run: |
+          export PACKER_LOG=1
           ENVIRONMENT=${{ github.event.inputs.environment }}
           mkdir -p output/kvm/$ENVIRONMENT
           packer build -var "seed_image_path=builders/kvm/cloud-init/$ENVIRONMENT/seed.img" \

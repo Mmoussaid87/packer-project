@@ -48,12 +48,35 @@ jobs:
       # Step 3: Generate Cloud-Init Seed Image
       - name: Generate cloud-init seed image
         run: |
-          sudo apt install cloud-image-utils
-          ENVIRONMENT=${{ github.event.inputs.environment }}
-          mkdir -p packer/builders/kvm/cloud-init/$ENVIRONMENT/seed
-          cloud-localds packer/builders/kvm/cloud-init/$ENVIRONMENT/seed.img \
-            packer/builders/kvm/cloud-init/$ENVIRONMENT/user-data \
-            packer/builders/kvm/cloud-init/$ENVIRONMENT/meta-data
+          # Ensure cloud-image-utils is installed
+          sudo apt-get update
+          sudo apt-get install -y cloud-image-utils
+
+          # Set the environment dynamically
+          ENVIRONMENT="${{ github.event.inputs.environment }}"
+
+          # Define the cloud-init path and remove trailing slashes
+          CLOUD_INIT_PATH="packer/builders/kvm/cloud-init"
+          CLOUD_INIT_PATH="${CLOUD_INIT_PATH%/}" # Remove trailing slash if it exists
+
+          # Ensure the directory structure exists
+          mkdir -p "${CLOUD_INIT_PATH}/${ENVIRONMENT}"
+
+          # Verify required files exist before creating seed.img
+          if [ ! -f "${CLOUD_INIT_PATH}/${ENVIRONMENT}/user-data" ]; then
+              echo "Error: user-data file is missing in ${CLOUD_INIT_PATH}/${ENVIRONMENT}/"
+              exit 1
+          fi
+
+          if [ ! -f "${CLOUD_INIT_PATH}/${ENVIRONMENT}/meta-data" ]; then
+              echo "Error: meta-data file is missing in ${CLOUD_INIT_PATH}/${ENVIRONMENT}/"
+              exit 1
+          fi
+
+          # Generate the seed image
+          cloud-localds "${CLOUD_INIT_PATH}/${ENVIRONMENT}/seed.img" \
+            "${CLOUD_INIT_PATH}/${ENVIRONMENT}/user-data" \
+            "${CLOUD_INIT_PATH}/${ENVIRONMENT}/meta-data"
 
       # Step 4: Initialize Packer
       - name: Initialize Packer

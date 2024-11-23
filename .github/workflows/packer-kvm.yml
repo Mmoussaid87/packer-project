@@ -111,6 +111,8 @@ jobs:
           git config user.name "youssef GHActions"
           git config user.email "youssefmoustakim234@gmail.com"
           git lfs install
+          git lfs track "output/kvm/$ENVIRONMENT/*.qcow2" 
+          git add .gitattributes
           git add output/kvm/$ENVIRONMENT/$IMAGE_NAME
           git commit -m "Add KVM image for $ENVIRONMENT: $IMAGE_NAME"
           git push

@@ -48,6 +48,7 @@ jobs:
       # Step 3: Generate Cloud-Init Seed Image
       - name: Generate cloud-init seed image
         run: |
+          sudo apt install cloud-image-utils
           ENVIRONMENT=${{ github.event.inputs.environment }}
           mkdir -p packer/builders/kvm/cloud-init/$ENVIRONMENT/seed
           cloud-localds packer/builders/kvm/cloud-init/$ENVIRONMENT/seed.img \

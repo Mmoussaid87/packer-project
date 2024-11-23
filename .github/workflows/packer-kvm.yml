@@ -74,6 +74,7 @@ jobs:
           fi
 
           # Generate the seed image
+          ls  "${CLOUD_INIT_PATH}/${ENVIRONMENT}"
           cloud-localds "${CLOUD_INIT_PATH}/${ENVIRONMENT}/seed.img" \
             "${CLOUD_INIT_PATH}/${ENVIRONMENT}/user-data" \
             "${CLOUD_INIT_PATH}/${ENVIRONMENT}/meta-data"

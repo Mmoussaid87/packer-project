@@ -29,7 +29,7 @@ variable "hostname" {
 
 variable "iso_checksum" {
   type    = string
-  default = "e66de9baace72d53639daba0dce23126288d1a4ed0b9ebb55b163462cdda9a91"
+  default = "95a3363a586c113618b3b2b69b40303ca30dd20406cde35560cea0ed015c8529"
 }
 
 variable "iso_url" {

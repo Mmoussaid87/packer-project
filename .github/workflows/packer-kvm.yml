@@ -1,12 +1,6 @@
 name: Build KVM Image with Packer
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       environment:

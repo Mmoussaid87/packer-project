@@ -54,7 +54,12 @@ jobs:
 
           # Set the environment dynamically
           ENVIRONMENT="${{ github.event.inputs.environment }}"
-          ENVIRONMENT="${ENVIRONMENT%/}" # Remove trailing slash if it exists
+
+          if [ -z "$ENVIRONMENT" ]; then
+            echo "Warning: ENVIRONMENT is not set. Defaulting to 'testing'."
+            ENVIRONMENT="testing"
+          fi
+
           # Define the cloud-init path and remove trailing slashes
           CLOUD_INIT_PATH="packer/builders/kvm/cloud-init"
           CLOUD_INIT_PATH="${CLOUD_INIT_PATH%/}" # Remove trailing slash if it exists

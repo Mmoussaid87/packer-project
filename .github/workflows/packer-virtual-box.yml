@@ -1,4 +1,4 @@
-name: Packer KVM Workflow
+name: Packer installation
 
 on:
   push:
